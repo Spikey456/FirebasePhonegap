@@ -40,6 +40,7 @@ function onPhotoURISuccess(imageURI) {
 
 // Get image handle
 //
+console.log(imageURI);
 var largeImage = document.getElementById('largeImage');
 
 // Unhide image elements
@@ -50,7 +51,7 @@ largeImage.style.display = 'block';
 // The in-line CSS rules are used to resize the image
 
 //
-largeImage.src = imageURI;
+largeImage.src = "data:image/png;base64,"+imageURI;
 }
 
 // A button will call this function
@@ -74,9 +75,10 @@ function capturePhotoEdit() {
 //
 function getPhoto(source) {
 // Retrieve image file location from specified source
-navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
-destinationType: destinationType.FILE_URI,
-sourceType: source });
+    var options ={ quality: 50,
+        destinationType: Camera.DestinationType.DATA_URL,
+        sourceType: source }
+navigator.camera.getPicture(onPhotoURISuccess, onFail, options);
 }
 
 // Called if something bad happens.
