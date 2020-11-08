@@ -57,6 +57,9 @@
     // Your web app's Firebase configuration
     </script>
 
+    <script type="text/javascript" charset="utf-8">
+        
+   
     </script>
 </head>
 
@@ -85,8 +88,12 @@
             Library</button><br>
             <button class="btn btn-primary" onclick="getPhoto(Camera.PictureSourceType.SAVEDPHOTOALBUM);">From Photo
             Album</button><br>
-            <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
-            <img style="display:none;width:500px;height:auto;" id="largeImage" src="" />
+            <button class="btn btn-primary" onclick="alert(document.getElementsByTagName('body')[0].innerHTML);">Check HTML</button><br>
+            <img style="display:none;width:100px;height:100px;" id="smallImage" src="" />
+            <img style="display:none;width:500px;height:auto; position:absolute; top:500; left: 50;" id="largeImage" src="" />
+            <div id="variables" style="padding:50px; width:200px;">
+
+            </div>
             </center>
         </div>
     </div>

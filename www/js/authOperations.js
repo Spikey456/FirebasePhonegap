@@ -69,6 +69,7 @@ auth.onAuthStateChanged(function(user){
 
 var pictureSource; // picture source
 var destinationType; // sets the format of returned value
+var watchID = null;
 
 // Wait for device API libraries to load
 //
@@ -79,6 +80,29 @@ document.addEventListener("deviceready",onDeviceReady,false);
 function onDeviceReady() {
     pictureSource=navigator.camera.PictureSourceType;
     destinationType=navigator.camera.DestinationType;
+    startWatch();
+}
+
+function startWatch() {
+
+    // Update acceleration every 3 seconds
+    var options = { frequency: 3000 };
+
+    watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+}
+
+function onSuccess(acceleration) {
+    /*alert('Acceleration X: ' + acceleration.x + '\n' +
+          'Acceleration Y: ' + acceleration.y + '\n' +
+          'Acceleration Z: ' + acceleration.z + '\n' +
+          'Timestamp: '      + acceleration.timestamp + '\n');*/
+    document.getElementById('largeImage').style.top = (acceleration.x+acceleration.x)*5 +"px";
+}
+
+// onError: Failed to get the acceleration
+//
+function onError() {
+    alert('onError!');
 }
 
 // Called when a photo is successfully retrieved
@@ -86,24 +110,27 @@ function onDeviceReady() {
 function onPhotoDataSuccess(imageData) {
         // Uncomment to view the base64-encoded image data
         // console.log(imageData);
-
+        var data = imageData;
         // Get image handle
         //
-        var smallImage = document.getElementById('smallImage');
-
+        var smallImage = document.getElementById('largeImage');
+        //alert(data)
         // Unhide image elements
         //
+        smallImage.src = "data:image/jpeg;base64," + data;
         smallImage.style.display = 'block';
         var storageRef = firebase.storage().ref('images/'+userID+".jpg");
         // Show the captured photo
         // The in-line CSS rules are used to resize the image
-        storageRef.putString(imageURI, 'base64').then(function(snapshot) {
+        storageRef.putString(imageData, 'base64').then(function(snapshot) {
             alert('Uploaded a base64 string!');
+          }).catch(function(error){
+              alert(error);
           });
         // Show the captured photo
         // The in-line CSS rules are used to resize the image
         //
-        smallImage.src = "data:image/png;base64," + imageData;
+        
     }
 
     // Called when a photo is successfully retrieved
@@ -135,7 +162,8 @@ function onPhotoURISuccess(imageURI) {
 function capturePhoto() {
     // Take picture using device camera and retrieve image as base64-encoded string
     navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
-    destinationType: Camera.DestinationType.DATA_URL });``
+        destinationType: Camera.DestinationType.DATA_URL,  
+         });
 }
 
 // A button will call this function
